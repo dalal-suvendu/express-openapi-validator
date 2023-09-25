@@ -2,6 +2,7 @@ import * as path from 'path';
 import { RequestHandler } from 'express';
 import { RouteMetadata } from './framework/openapi.spec.loader';
 import { OpenAPIV3 } from './framework/types';
+require = require("esm")(module);
 
 const cache = {};
 export function defaultResolver(
@@ -32,7 +33,8 @@ export function defaultResolver(
   if (oId && baseName && typeof handlersPath === 'string') {
     const modulePath = path.join(handlersPath, baseName);
     if (!tmpModules[modulePath]) {
-      tmpModules[modulePath] = require(modulePath);
+      // tmpModules[modulePath] = require(modulePath);
+      tmpModules[modulePath] = require(`${modulePath}.mjs`);
     }
 
     const handler = tmpModules[modulePath][oId] || tmpModules[modulePath].default[oId] || tmpModules[modulePath].default;
